@@ -3,6 +3,8 @@ from main.forms import MoodEntryForm
 from main.models import MoodEntry
 from django.http import HttpResponse
 from django.core import serializers
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 
 # Create your views here.
@@ -44,3 +46,16 @@ def create_mood_entry(request):
 
     context = {'form': form}
     return render(request, "create_mood_entry.html", context)
+
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
