@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -27,6 +28,7 @@ def show_json_by_id(request, id):
     data = MoodEntry.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+@login_required(login_url='/login')
 def show_main(request):
     mood_entries = MoodEntry.objects.all()
 
