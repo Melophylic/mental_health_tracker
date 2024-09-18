@@ -36,6 +36,7 @@ def show_main(request):
     mood_entries = MoodEntry.objects.filter(user=request.user)
 
     context = {
+        'name': request.user.username,
         'npm' : '2306275430',
         'nama': 'Muhammad Nadzim Tahara',
         'kelas': 'PBP E',

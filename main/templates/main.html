@@ -2,10 +2,12 @@
 {% block content %}
 <h1>Mental Health Tracker</h1>
 
+<h3>Welcome {{ name }}</h3>
+
 <h5>NPM: </h5>
 <p>{{ npm }}<p>
 <h5>Name: </h5>
-<p>{{ name }}<p>
+<p>{{ nama }}<p>
 <h5>Class: </h5>
 <p>{{ kelas }}<p> 
 
@@ -20,8 +22,6 @@
     <th>Mood Intensity</th>
   </tr>
 
-  {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini 
-  {% endcomment %} 
   {% for mood_entry in mood_entries %}
   <tr>
     <td>{{mood_entry.mood}}</td>
