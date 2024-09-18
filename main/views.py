@@ -33,13 +33,13 @@ def show_json_by_id(request, id):
 
 @login_required(login_url='/login')
 def show_main(request):
-    mood_entries = MoodEntry.objects.all()
+    mood_entries = MoodEntry.objects.filter(user=request.user)
 
     context = {
         'npm' : '2306275430',
-        'name': 'Muhammad Nadzim Tahara',
+        'nama': 'Muhammad Nadzim Tahara',
         'kelas': 'PBP E',
-        'mood_entries': mood_entries        
+        'mood_entries': mood_entries,        
         'last_login': request.COOKIES['last_login'],
     }
 
@@ -49,7 +49,9 @@ def create_mood_entry(request):
     form = MoodEntryForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        form.save()
+        mood_entry = form.save(commit=False)
+        mood_entry.user = request.user
+        mood_entry.save()
         return redirect('main:show_main')
 
     context = {'form': form}
@@ -68,20 +70,21 @@ def register(request):
     return render(request, 'register.html', context)
 
 def login_user(request):
-   if request.method == 'POST':
-      form = AuthenticationForm(data=request.POST)
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
 
-      if form.is_valid():
-          user = form.get_user()
-          login(request, user)
-          response = HttpResponseRedirect(reverse("main:show_main"))
-          response.set_cookie('last_login', str(datetime.datetime.now()))
-      return response
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+    else:
+        form = AuthenticationForm(request)
+    context = {'form': form}
+    return render(request, 'login.html', context)
+    # return response
 
-   else:
-      form = AuthenticationForm(request)
-   context = {'form': form}
-   return render(request, 'login.html', context)
 
 def logout_user(request):
     logout(request)
